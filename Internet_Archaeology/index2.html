@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Cache-control" content="no-cache">
+        <meta http-equiv="Expires" content="-1">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="leaflet/leaflet.css">
+        <script src="leaflet/leaflet.js"></script>
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>TARP Materials Processing Workflow</title>
+    </head>
+    
+    <body>
+        <div id="map">
+        </div>
+        <script src="data/popups.js"></script>
+        
+        <script>
+        
+        	var map = L.map('map', {
+    			crs: L.CRS.Simple,
+    			minZoom: -3,
+    			maxZoom: 0
+			});
+
+			var bounds = [[0,0], [6408,10402]];
+
+			var image = L.imageOverlay('data/TARP_Materials_workflows_DRAFT_01_29_20_p200.jpg', bounds).addTo(map);
+
+			map.fitBounds(bounds);
+			
+			
+			var test1 = L.latLng([ 5200, 1500 ]);
+			L.marker(test1).addTo(map);
+			
+			
+			var bounds_group = new L.featureGroup([]);
+		
+				function setBounds() {
+				}
+			
+			// Add Popups       
+				function pop_popups(feature, layer) {
+					var popupContent = feature.properties['Description']
+					/*
+					var popupContent = 
+						 '<span class="title" style="font: 16px/19px Arial, sans-serif;">Stream: </span><span class="data" style="font: 16px/19px Arial, sans-serif;">' + (feature.properties['Stream'] !== null ? Autolinker.link(String(feature.properties['Stream'])) : '') + '</span>'
+						+ '<div class="description">' + (feature.properties['Box_text'] !== null ? Autolinker.link(String(feature.properties['Box_text'])) : '') + '</div>'
+						+ '<span class="title">Description: </span><span class="data">' + (feature.properties['Description'] !== null ? Autolinker.link(String(feature.properties['Description'])) : '') + '</span>'
+						;
+
+					layer.bindPopup(popupContent, {maxHeight: 400});
+					*/
+				}
+
+				function style_popups_0() {
+					return {
+						pane: 'pane_popups',
+						opacity: 1,
+						color: '#317031',
+					   dashArray: '',
+						lineCap: 'butt',
+						lineJoin: 'miter',
+						weight: 1.0, 
+						fill: true,
+						fillOpacity: 0.5,
+						fillColor: '#5C995C',
+					}
+				}
+		
+				map.createPane('pane_popups');
+				map.getPane('pane_popups').style.zIndex = 450;
+				map.getPane('pane_popups').style['mix-blend-mode'] = 'normal';
+		
+				var layer_popups = new L.geoJson(json_popups, {
+					attribution: '',
+					pane: 'pane_popups',
+					onEachFeature: pop_popups,
+					style: style_popups_0,
+				});
+		
+				bounds_group.addLayer(layer_popups);
+		
+				map.addLayer(layer_popups);
+			
+			
+        </script>
+        
+    </body>
+</html>
